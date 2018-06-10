@@ -309,6 +309,14 @@ nav h1 a {
 #reviews-list li p {
   margin: 0 0 10px;
 }
+@media screen and (min-width: 850px) {
+  #reviews-list li p, td, th {
+    font-size: 12pt;
+  }
+  #restaurant-address {
+    font-size: 14pt;
+  }
+}
 #restaurant-hours td {
   color: #666;
 }
