@@ -11,10 +11,11 @@ body {
 	background-color: #fdfdfd;
 	margin: 0;
   position:relative;
-  max-width: 1200px;
+  max-width: 1150px;
   margin-left: auto;
   margin-right: auto;
 }
+
 ul, li {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 10pt;
@@ -148,6 +149,8 @@ nav h1 a {
   flex-direction: row;
   justify-content: center;
 }
+
+/* Setting the list elements of resturant to a maximum width of 100% when screen size is 0px or more */
 #restaurants-list li {
   background-color: #fff;
   border: 2px solid #ccc;
@@ -157,13 +160,20 @@ nav h1 a {
   padding: 0 30px 25px;
   text-align: left;
   min-width: 270px;
-  max-width: 300px;
+  max-width: 100%;
 }
 
-/* Setting the list elements of resturant to a maximum width of 100% when screen size is 0px or more */
-@media screen and (min-width: 0px){
-  #resturants-list li {
-    max-width: 100%
+/* Setting the list elements of resturant to a maximum width of 45% when screen size is 400px or more */
+@media screen and (min-width: 400px){
+  #restaurants-list li {
+    max-width: 45%;
+  }
+}
+
+/* Setting the list elements of resturant to a maximum width of fixed size 270px when screen size is 900px or more */
+@media screen and (min-width: 900px){
+  #restaurants-list li {
+    max-width: 270px;
   }
 }
 
@@ -172,9 +182,10 @@ nav h1 a {
   display: block;
   margin: 0;
   max-width: 100%;
-  min-height: 248px;
   min-width: 100%;
+  overflow: hidden;
 }
+
 #restaurants-list li h1 {
   color: #f18200;
   font-family: Arial,sans-serif;
@@ -203,12 +214,16 @@ nav h1 a {
 }
 
 /* ====================== Restaurant Details ====================== */
+
+/*
 .inside header {
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 1000;
 }
+*/
+
 .inside #map-container {
   background: blue none repeat scroll 0 0;
   height: 87%;
@@ -222,15 +237,18 @@ nav h1 a {
   height: 100%;
   width: 100%;
 }
+/*
 .inside #footer {
   bottom: 0;
   position: absolute;
   width: 50%;
 }
+*/
+
 #restaurant-name {
   color: #f18200;
   font-family: Arial,sans-serif;
-  font-size: 20pt;
+  font-size: 24px;
   font-weight: 200;
   letter-spacing: 0;
   margin: 15px 0 30px;
