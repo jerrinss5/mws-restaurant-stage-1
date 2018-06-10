@@ -166,12 +166,12 @@ nav h1 a {
 /* Setting the list elements of resturant to a maximum width of 45% when screen size is 400px or more */
 @media screen and (min-width: 400px){
   #restaurants-list li {
-    max-width: 45%;
+    max-width: 50%;
   }
 }
 
-/* Setting the list elements of resturant to a maximum width of fixed size 270px when screen size is 900px or more */
-@media screen and (min-width: 900px){
+/* Setting the list elements of resturant to a maximum width of fixed size 270px when screen size is 850px or more */
+@media screen and (min-width: 850px){
   #restaurants-list li {
     max-width: 270px;
   }
