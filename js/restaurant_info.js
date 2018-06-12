@@ -55,9 +55,42 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
-  const image = document.getElementById('restaurant-img');
-  image.className = 'restaurant-img'
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  // getting the image from the database
+  const img = DBHelper.imageUrlForRestaurant(restaurant);
+
+  // spitting the image on the .
+  img_split = img.split('.')
+
+  // creating the picture element to load images responsively
+  const pic = document.getElementsByName('restaurant-picture')
+  let src
+
+  // handling images for view port width of 321px and above
+  src = document.createElement('source')
+  src.media = '(min-width: 321px);'
+  src.srcset = img_split[0] + "-640-med." + img_split[1]
+  pic.append(src)
+
+  // handling images for view port width of 641px and above
+  src = document.createElement('source')
+  src.media = '(min-width: 641px);'
+  src.srcset = img_split[0] + "-1024-1x." + img_split[1]
+  pic.append(src)
+
+  // handling images for view port width of 1025px and above
+  src = document.createElement('source')
+  src.media = '(min-width: 1025px);'
+  src.srcset = img_split[0] + "-1600-2x." + img_split[1]
+  pic.append(src)
+
+  // const image = document.getElementById('restaurant-img');
+  const image = document.createElement('img')
+  image.id = 'restaurant-img'
+  // image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  // setting the smallest and default image size for the application
+  image.src = img_split[0] + "-320-small." + img_split[1]
+  image.alt = restaurant.name
+  pic.append(image)
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;

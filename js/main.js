@@ -138,10 +138,18 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
+  // getting the image from the database
+  const img = DBHelper.imageUrlForRestaurant(restaurant);
+
+  // spitting the image on the .
+  img_split = img.split('.')
+
   const image = document.createElement('img');
   image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  li.append(image);
+  //image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  // setting the smallest and default image size for the application as larger image size is not needed
+  image.src = img_split[0] + "-320-small." + img_split[1]
+  li.append(image)
 
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;

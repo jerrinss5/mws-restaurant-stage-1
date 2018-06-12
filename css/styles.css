@@ -3,9 +3,9 @@
 
 body,td,th,p{
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 10pt;
+	font-size: 16px;
 	color: #333;
-	line-height: 1.5;
+	line-height: 1.2em;
 }
 body {
 	background-color: #fdfdfd;
@@ -257,10 +257,12 @@ nav h1 a {
   line-height: 1.1;
 }
 #restaurant-img {
+  transition: width 0.5s;
 	width: 90%;
 }
 #restaurant-address {
-  font-size: 12pt;
+  font-size: 16px;
+  line-height: 1.2em;
   margin: 10px 0px;
 }
 #restaurant-cuisine {
@@ -311,10 +313,10 @@ nav h1 a {
 }
 @media screen and (min-width: 850px) {
   #reviews-list li p, td, th {
-    font-size: 12pt;
+    font-size: 18px;
   }
   #restaurant-address {
-    font-size: 14pt;
+    font-size: 20px;
   }
 }
 #restaurant-hours td {
