@@ -149,6 +149,7 @@ createRestaurantHTML = (restaurant) => {
   //image.src = DBHelper.imageUrlForRestaurant(restaurant);
   // setting the smallest and default image size for the application as larger image size is not needed
   image.src = img_split[0] + "-320-small." + img_split[1]
+  image.alt = restaurant.name
   li.append(image)
 
   const name = document.createElement('h1');
@@ -166,6 +167,11 @@ createRestaurantHTML = (restaurant) => {
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
+  // setting the attribute to indicate this being a button rather than a link href
+  more.setAttribute("role", "button");
+  more.setAttribute("tabindex", "0");
+  more.setAttribute("aria-pressed", "false");
+  more.setAttribute("aria-label", restaurant.name);
   li.append(more)
 
   return li

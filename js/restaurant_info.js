@@ -62,7 +62,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   img_split = img.split('.')
 
   // creating the picture element to load images responsively
-  const pic = document.getElementsByName('restaurant-picture')
+  const pic = document.getElementById('restaurant-picture')
   let src
 
   // handling images for view port width of 321px and above
