@@ -4,7 +4,7 @@ var staticCacheName = 'resto-review-static-v1';
 self.addEventListener('install', function(event){
     var urlsToCache = [
         '/',
-        '/restaurant.html',
+        'restaurant.html',
         'js/main.js',
         'sw.js',
         'js/serviceworker_register.js',

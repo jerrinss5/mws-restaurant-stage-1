@@ -149,7 +149,7 @@ createRestaurantHTML = (restaurant) => {
   //image.src = DBHelper.imageUrlForRestaurant(restaurant);
   // setting the smallest and default image size for the application as larger image size is not needed
   image.src = img_split[0] + "-320-small." + img_split[1]
-  image.alt = restaurant.name
+  image.alt = "An image of "+restaurant.name+" in "+restaurant.neighborhood
   li.append(image)
 
   const name = document.createElement('h1');

@@ -89,7 +89,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   // image.src = DBHelper.imageUrlForRestaurant(restaurant);
   // setting the smallest and default image size for the application
   image.src = img_split[0] + "-320-small." + img_split[1]
-  image.alt = restaurant.name
+  image.alt = "An image of "+restaurant.name+" in "+restaurant.neighborhood
   pic.append(image)
 
   const cuisine = document.getElementById('restaurant-cuisine');
