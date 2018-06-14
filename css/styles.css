@@ -186,7 +186,7 @@ nav h1 a {
   overflow: hidden;
 }
 
-#restaurants-list li h1 {
+#restaurants-list li h1 h2 {
   color: #804400;
   font-family: Arial,sans-serif;
   font-size: 14pt;
