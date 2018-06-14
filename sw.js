@@ -13,7 +13,6 @@ self.addEventListener('install', function(event){
         'js/restaurant_info.js',
         'css/styles.css',
         'data/restaurants.json',
-        'img/',
         'https://fonts.gstatic.com/s/roboto/v15/2UX7WLTfW3W8TclTUvlFyQ.woff',
         'https://fonts.gstatic.com/s/roboto/v15/d-6IYplOFocCacKzxwXSOD8E0i7KZn-EPnyo3HZu7kw.woff'
     ];

@@ -80,6 +80,9 @@ window.initMap = () => {
     center: loc,
     scrollwheel: false
   });
+  // ref for role: https://stackoverflow.com/questions/50503677/proper-use-of-aria-role-for-google-maps
+  const map_attr = document.getElementById('map');
+  map_attr.setAttribute("role", "application");
   updateRestaurants();
 }
 
