@@ -58,41 +58,34 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   // getting the image from the database
   const img = DBHelper.imageUrlForRestaurant(restaurant);
 
-  // spitting the image on the .
-  img_split = img.split('.')
-
   // creating the picture element to load images responsively
   const pic = document.getElementById('restaurant-picture')
   let src
 
-  // handling images for view port width of 321px and above
-  src = document.createElement('source')
-  src.media = '(min-width: 321px);'
-  //src.srcset = img_split[0] + "-640-med." + img_split[1]
-  src.srcset = `${img_split[0]}-640-med.${img_split[1]}`
-  pic.append(src)
+  // handling images for view port width of 1025px and above
+   src = document.createElement('source')
+   src.media = '(min-width: 1025px)'
+   src.srcset = `${img}-1600-2x.jpg`
+   pic.append(src)
 
   // handling images for view port width of 641px and above
   src = document.createElement('source')
-  src.media = '(min-width: 641px);'
-  //src.srcset = img_split[0] + "-1024-1x." + img_split[1]
-  src.srcset = `${img_split[0]}-1024-1x.${img_split[1]}`
+  src.media = '(min-width: 641px)'
+  src.srcset = `${img}-1024-1x.jpg`
   pic.append(src)
 
-  // handling images for view port width of 1025px and above
+  // handling images for view port width of 321px and above
   src = document.createElement('source')
-  src.media = '(min-width: 1025px);'
-  //src.srcset = img_split[0] + "-1600-2x." + img_split[1]
-  src.srcset = `${img_split[0]}-1600-2x.${img_split[1]}`
+  src.media = '(min-width: 321px)'
+  src.srcset = `${img}-640-med.jpg`
   pic.append(src)
-
+  
   // const image = document.getElementById('restaurant-img');
   const image = document.createElement('img')
   image.id = 'restaurant-img'
   // image.src = DBHelper.imageUrlForRestaurant(restaurant);
   // setting the smallest and default image size for the application
-  //image.src = img_split[0] + "-320-small." + img_split[1]
-  image.src = `${img_split[0]}-320-small.${img_split[1]}`
+  image.src = `${img}-320-small.jpg`
   //image.alt = "An image of "+restaurant.name+" in "+restaurant.neighborhood
   image.alt = `An image of ${restaurant.name} in ${restaurant.neighborhood}`
   pic.append(image)

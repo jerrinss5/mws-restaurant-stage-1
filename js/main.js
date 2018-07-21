@@ -151,7 +151,7 @@ createRestaurantHTML = (restaurant) => {
   image.className = 'restaurant-img';
   //image.src = DBHelper.imageUrlForRestaurant(restaurant);
   // setting the smallest and default image size for the application as larger image size is not needed
-  image.src = img_split[0] + "-320-small." + img_split[1]
+  image.src = img_split[0] + "-320-small.jpg"
   image.alt = "An image of "+restaurant.name+" in "+restaurant.neighborhood
   li.append(image)
 

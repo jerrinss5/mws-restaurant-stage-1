@@ -3,18 +3,16 @@ var staticCacheName = 'resto-review-static-v1';
 // cache the below pages for offline access
 self.addEventListener('install', function(event){
     var urlsToCache = [
-        '/',
-        'restaurant.html',
-        'js/main.js',
-        'sw.js',
-        'js/serviceworker_register.js',
-        'js/',
-        'js/dbhelper.js',
-        'js/restaurant_info.js',
-        'css/styles.css',
-        'data/restaurants.json',
-        'https://fonts.gstatic.com/s/roboto/v15/2UX7WLTfW3W8TclTUvlFyQ.woff',
-        'https://fonts.gstatic.com/s/roboto/v15/d-6IYplOFocCacKzxwXSOD8E0i7KZn-EPnyo3HZu7kw.woff'
+        "/",
+        "/index.html",
+        "/restaurant.html",
+        "/review.html",
+        "/css/styles.css",
+        "/js/dbhelper.js",
+        "/js/main.js",
+        "/js/restaurant_info.js",
+        "https://fonts.gstatic.com/s/roboto/v15/2UX7WLTfW3W8TclTUvlFyQ.woff",
+        "https://fonts.gstatic.com/s/roboto/v15/d-6IYplOFocCacKzxwXSOD8E0i7KZn-EPnyo3HZu7kw.woff"
     ];
 
     event.waitUntil(
