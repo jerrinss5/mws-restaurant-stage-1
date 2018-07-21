@@ -1,7 +1,7 @@
-var staticCacheName = 'resto-review-static-v1';
+const staticCacheName = "resto-review-static-v1";
 
 // cache the below pages for offline access
-self.addEventListener('install', function(event){
+self.addEventListener('install', event => {
     var urlsToCache = [
         "/",
         "/index.html",
@@ -11,15 +11,18 @@ self.addEventListener('install', function(event){
         "/js/dbhelper.js",
         "/js/main.js",
         "/js/restaurant_info.js",
+        "/js/serviceworker_register.js",
         "https://fonts.gstatic.com/s/roboto/v15/2UX7WLTfW3W8TclTUvlFyQ.woff",
         "https://fonts.gstatic.com/s/roboto/v15/d-6IYplOFocCacKzxwXSOD8E0i7KZn-EPnyo3HZu7kw.woff"
-    ];
+    ]
 
-    event.waitUntil(
-        caches.open(staticCacheName).then(function(cache){
-            return cache.addAll(urlsToCache);
-        })
-    );
+    event.waitUntil(caches.open(staticCacheName).then(cache => {
+      return cache
+        .addAll(urlsToCache)
+        .catch(error => {
+          console.log("Failed to open cache: " + error);
+        });
+    }));
 });
 
 // responding with an entry from the cache if there is a match
