@@ -8,15 +8,18 @@ var markers = []
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-  fetchNeighborhoods();
-  fetchCuisines();
+  DBHelper.fetchRestaurants((error, restaurants_list) => {
+    fetchNeighborhoods(restaurants_list);
+    fetchCuisines(restaurants_list);
+  });
+  
 });
 
 /**
  * Fetch all neighborhoods and set their HTML.
  */
-fetchNeighborhoods = () => {
-  DBHelper.fetchNeighborhoods((error, neighborhoods) => {
+fetchNeighborhoods = (restaurants_list) => {
+  DBHelper.fetchNeighborhoods(restaurants_list, (error, neighborhoods) => {
     if (error) { // Got an error
       console.error(error);
     } else {
@@ -42,8 +45,8 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
 /**
  * Fetch all cuisines and set their HTML.
  */
-fetchCuisines = () => {
-  DBHelper.fetchCuisines((error, cuisines) => {
+fetchCuisines = (restaurants_list) => {
+  DBHelper.fetchCuisines(restaurants_list, (error, cuisines) => {
     if (error) { // Got an error!
       console.error(error);
     } else {
