@@ -1,7 +1,7 @@
 # Mobile Web Specialist Certification Course
 --------------------
 
-install npm http server
+ run: npm install http-server -g
  
  checkout the git code
 
