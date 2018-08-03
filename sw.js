@@ -50,7 +50,7 @@ self.addEventListener('fetch', function(event){
 
     // checking if the requested url is not for the REST API
     // if it is not try to serve from cache and if not present in cache serve from the web
-    if (requestedURL.port !== "1337" && event.request.url.indexOf('maps.googleapis.com') < 0){
+    if (requestedURL.port !== "1337"){
         event.respondWith(
             caches.match(event.request).then(response => {
                 return response || fetch(event.request).then(response => {
