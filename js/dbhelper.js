@@ -1,6 +1,7 @@
 /**
  * Common database helper functions.
  */
+
 class DBHelper {
   /**
    * Database URL.
@@ -21,12 +22,41 @@ class DBHelper {
       fetchURL = DBHelper.DATABASE_URL;
     }
 
-    fetch(fetchURL).then(response => {response.json().then(restaurants => {
-      callback(null, restaurants);
-    });
+    // trying to first fetch from the indexed db
+    let restoPromise;
+    if (id){
+      restoPromise = IDBHelper.getFromDBbyID(id);
+    }else{
+      restoPromise = IDBHelper.getFromDB();
+    }
+    
+    restoPromise.then(restaurants => {
+      // checking if the database has any restaurant element
+      if (typeof restaurants != "undefined" && restaurants.length > 9) {
+        console.log('Data fetched from Indexed DB')
+        callback(null, restaurants);
+      }else if(typeof restaurants != "undefined" && typeof restaurants.length === "undefined" && id) {
+        console.log('Data fetched from Indexed DB')
+        callback(null, restaurants);
+      }
+      else{
+        console.log('Not present in the indexed db, storing it on indexed db');
+        fetch(fetchURL).then(response => {response.json().then(restaurants => {
+          IDBHelper.insertToDB(restaurants).then(() => {
+            console.log('Value successfully inserted into IDB');
+          }).catch(error => {
+            console.log(`Something went wrong when inserting to the IDB: ${error}`);
+          });
+          callback(null, restaurants);
+        });
+        }).catch(error => {
+          callback(`Unable to fetch with ${error}`, null);
+        });
+      }
+      
     }).catch(error => {
-      callback(`Unable to fetch with ${error}`, null);
-    });
+      console.log(`Some error occurred: ${error}`);
+    })
   }
 
   /**
