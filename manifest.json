@@ -1,0 +1,8 @@
+{
+    "short_name": "Resto Reviews",
+    "name": "Restaurant Review website as part of Udacity Nano Degree course work",
+    "start_url": "/index.html",
+    "background_color": "#3367D6",
+    "theme_color": "#3367D6",
+    "display": "fullscreen"
+  }
