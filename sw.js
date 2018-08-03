@@ -23,6 +23,7 @@ self.addEventListener('install', event => {
         "/img/8-320-small.jpg",
         "/img/9-320-small.jpg",
         "/img/10-320-small.jpg",
+        "/manifest.json",
         "https://fonts.gstatic.com/s/roboto/v15/2UX7WLTfW3W8TclTUvlFyQ.woff",
         "https://fonts.gstatic.com/s/roboto/v15/d-6IYplOFocCacKzxwXSOD8E0i7KZn-EPnyo3HZu7kw.woff"
     ]
