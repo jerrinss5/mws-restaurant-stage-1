@@ -1,4 +1,17 @@
 # Mobile Web Specialist Certification Course
+--------------------
+
+install npm http server
+ 
+ checkout the git code
+
+ then cd into the code directory
+
+ and run the following command : http-server -p 8000
+
+ if python server on 3.6.3 is used to serve the page then manifest.json file doesn't get loaded hurting the PWA score.
+
+
 ---
 #### _Three Stage Course Material Project - Restaurant Reviews_
 
