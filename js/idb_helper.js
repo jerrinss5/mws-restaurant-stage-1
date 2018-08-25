@@ -1,12 +1,15 @@
 const objectStore = "resto-review";
+const objectStore2 = "reviewaddition"
 
 class IDBHelper {
     // method to open an IDB and return the promise for the same
     static openDB() {
-        const dbPromise = idb.open('resto-review-db', 1, function(upgradeDb) {
+        const dbPromise = idb.open('resto-review-db', 2, upgradeDb => {
             switch(upgradeDb.oldVersion) {
               case 0:
                 upgradeDb.createObjectStore(objectStore, { keyPath: "id"});
+              case 1:
+                upgradeDb.createObjectStore(objectStore2, { autoIncrement : true });
             }
         });
         return dbPromise;
@@ -49,11 +52,24 @@ class IDBHelper {
                     restoStore.put(value);
                 });
             }
-            
-
             return tx.complete;
         });
 
         return dbPromise;
+    }
+
+    // inserting the review data into the review db
+    static insertToReviewDB(values) {
+        // opening the indexed db
+        return IDBHelper.openDB().then(db => {
+            let tx = db.transaction(objectStore2, 'readwrite');
+            let reviewStore = tx.objectStore(objectStore2);
+
+            // caching the values to the indexed DB
+            reviewStore.put(values);
+
+            // returning the promise for insertion
+            return tx.complete;
+        });
     }
 }

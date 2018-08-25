@@ -198,3 +198,29 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+const saveReview = () => {
+  // fetching the name from the html element
+  const name = document.getElementById("reviewerName").value;
+  // negating it with 0 to convert to number
+  const rating = document.getElementById("reviewRating").value - 0;
+  // fetching the comment from the html element
+  const comment = document.getElementById("reviewComment").value;
+
+  console.log("Adding review by: ", name);
+
+  DBHelper.saveReview(self.restaurant.id, name, rating, comment, (error, review) => {
+    if(review){
+      console.log("Received the review callback", review);
+    }
+    
+    if (error) {
+      console.log("Error saving review: ", error);
+    }
+    // Update the button onclick event
+    const btn = document.getElementById("btnSaveReview");
+    btn.onclick = event => saveReview();
+
+    window.location.href = "/restaurant.html?id=" + self.restaurant.id;
+  });
+}

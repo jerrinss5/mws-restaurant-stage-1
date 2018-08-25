@@ -322,3 +322,61 @@ nav h1 a {
 #restaurant-hours td {
   color: #666;
 }
+
+
+/***  Add Reiew styling  ****/
+/*** Design by Doug Brown repository ***/
+
+#add-reviews {
+  padding: 25px 40px 30px;
+  width: 100%;
+}
+
+#add-reviews label span {
+  display: block;
+  font-size: 14px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#add-reviews label input {
+  width: calc(100% - 20px);
+  box-sizing: border-box;
+  font-size: 18px;
+  padding: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#add-reviews label select {
+  font-size: 18px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#add-reviews label textarea {
+  width: calc(100% - 20px);
+  box-sizing: border-box;
+  font-size: 18px;
+  padding: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#add-reviews div {
+  margin-bottom: 15px;
+}
+
+#add-reviews button {
+  background-color: #2b1905;
+  border-bottom: 3px solid #eee;
+  color: #f0f0f0;
+  display: inline-block;
+  font-size: 14px;
+  padding: 8px 30px 10px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  right: 10px;
+}

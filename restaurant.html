@@ -46,6 +46,40 @@
       <table id="restaurant-hours"></table>
     </section>
     <!-- end restaurant -->
+    <!-- Beginning add reviews -->
+    <section id="add-reviews">
+        <div>
+            <h3> Add Review </h3>
+
+            <label>
+              <span class="label-text">Name</span>
+              <input type="text" id="reviewerName">
+            </label>
+          </div>
+  
+          <div>
+            <label>
+              <span class="label-text">Rating</span>
+              <select id="reviewRating">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </label>
+          </div>
+  
+          <div>
+            <label>
+              <span class="label-text">Comments</span>
+              <textarea id="reviewComment" rows="4" cols="40"></textarea>
+            </label>
+          </div>
+  
+          <button id="btnSaveReview" onclick="saveReview()">Save Review</button>
+    </section>
+      <!-- End add reviews -->
     <!-- Beginning reviews -->
     <section id="reviews-container">
       <ul id="reviews-list"></ul>

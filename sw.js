@@ -13,16 +13,6 @@ self.addEventListener('install', event => {
         "/js/serviceworker_register.js",
         "/js/idb.js",
         "/js/idb_helper.js",
-        "/img/1-320-small.jpg",
-        "/img/2-320-small.jpg",
-        "/img/3-320-small.jpg",
-        "/img/4-320-small.jpg",
-        "/img/5-320-small.jpg",
-        "/img/6-320-small.jpg",
-        "/img/7-320-small.jpg",
-        "/img/8-320-small.jpg",
-        "/img/9-320-small.jpg",
-        "/img/10-320-small.jpg",
         "/manifest.json",
         "https://fonts.gstatic.com/s/roboto/v15/2UX7WLTfW3W8TclTUvlFyQ.woff",
         "https://fonts.gstatic.com/s/roboto/v15/d-6IYplOFocCacKzxwXSOD8E0i7KZn-EPnyo3HZu7kw.woff"
@@ -50,7 +40,9 @@ self.addEventListener('fetch', function(event){
 
     // checking if the requested url is not for the REST API
     // if it is not try to serve from cache and if not present in cache serve from the web
-    if (requestedURL.port !== "1337"){
+    // also only caching localhost files and a google maps api required for working offline
+    if (requestedURL.port !== "1337" && (requestedURL.hostname === "localhost" || requestedURL.href === "https://maps.googleapis.com/maps/api/js?libraries=places&callback=initMap")){
+        console.log('caching for hostname: ', requestedURL.hostname);
         event.respondWith(
             caches.match(event.request).then(response => {
                 return response || fetch(event.request).then(response => {
@@ -69,13 +61,15 @@ self.addEventListener('fetch', function(event){
 
 function serveReviews(request) {
   
-    return caches.open(staticCacheName).then(function(cache) {
-      return cache.match(request).then(function(response) {
+    return caches.open(staticCacheName).then(cache => {
+      return cache.match(request).then(response => {
         if (response) return response;
   
-        return fetch(request).then(function(networkResponse) {
+        return fetch(request).then(networkResponse => {
           cache.put(request, networkResponse.clone());
           return networkResponse;
+        }).catch(error => {
+            console.log('some error occurred saving review from fetch: ',error);
         });
       });
     });

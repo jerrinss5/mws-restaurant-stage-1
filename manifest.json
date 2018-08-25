@@ -1,6 +1,6 @@
 {
-  "name": "Resto Reviews",
-  "short_name": "Restaurant Review website",
+  "name": "Restaurant Review website",
+  "short_name": "Resto Review",
   "lang": "en-US",
   "start_url": "index.html",
   "display": "standalone",

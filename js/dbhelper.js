@@ -234,4 +234,37 @@ class DBHelper {
     return marker;
   }
 
+  /******* Add Review Section  ********/
+
+  static saveReview(id, name, rating, comment, callback) {
+    // stop clicks on the submit button until callback
+    const btn = document.getElementById("btnSaveReview");
+    btn.onclick = null;
+
+    // generating the post body as per the documentation
+    const body = {
+      restaurant_id: id,
+      name: name,
+      rating: rating,
+      comments: comment
+    }
+
+    // adding the post data to the indexed db
+    console.log("Inserting review ", body);
+
+    let reviewPromise = IDBHelper.insertToReviewDB(body);
+
+    reviewPromise.then((reviews) => {
+      console.log('Value successfully inserted into IDB');
+      callback(null, reviews);
+    }).catch(error => {
+      console.log(`Some error occurred: ${error}`);
+      callback(error, null);
+    })
+    // callback(error, null);
+
+    // callback(null, result);
+  }
+
+
 }
