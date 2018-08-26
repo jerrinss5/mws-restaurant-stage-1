@@ -217,10 +217,11 @@ const saveReview = () => {
     if (error) {
       console.log("Error saving review: ", error);
     }
-    // Update the button onclick event
+    // Update the button onclick event to avoid resubmitting it in quick successions
     const btn = document.getElementById("btnSaveReview");
     btn.onclick = event => saveReview();
 
+    // redirecting back to the same page to refresh the page
     window.location.href = "/restaurant.html?id=" + self.restaurant.id;
   });
 }

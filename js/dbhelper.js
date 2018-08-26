@@ -249,12 +249,15 @@ class DBHelper {
       comments: comment
     }
 
+    // storing the reviews in indexed db for offline readability of reviews
     let reviewPromise = IDBHelper.insertToReviewDB(body);
 
+    // on successful storage to the indexed db preparing the request to the network call
     reviewPromise.then(() => {
       console.log('Value successfully inserted into IDB');
-      // calling IDB for pending request flow
+      // storing the request call first to pending request flow before making the network call
       IDBHelper.insertToPendingList('http://localhost:1337/reviews', 'POST', body);
+      // after inserting to pending list and attempting the network sending back the request to the main page
       // callback(null, null);
     }).catch(error => {
       console.log(`Some error occurred: ${error}`);

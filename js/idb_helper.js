@@ -76,12 +76,19 @@ class IDBHelper {
         });
     }
     
+    // REF: Dougb Brown code base for basic idea of 
+    // 1st Caching 
+    // 2nd Storing to pending queue
+    // 3rd Making network call 
+    // 4th removing from the pending queue
     // temoprarily storing the pending request list
     static insertToPendingList(url, method, body) {
         return IDBHelper.openDB().then(db => {
+            // standard open transaction to the object store of pending reviews 
             let tx = db.transaction(objectStore3, 'readwrite');
             let pendingStore = tx.objectStore(objectStore3);
 
+            // call to put into indexed db
             pendingStore.put({
                 data : {
                     url,
@@ -90,6 +97,7 @@ class IDBHelper {
                 }
             }).then(() => {
                 console.log('successfully added to the pending db');
+                // on successful insertion making call to next pending
                 IDBHelper.nextPending();
             }).catch(error => {
                 console.log('Some error occurred: ', error);
@@ -97,10 +105,12 @@ class IDBHelper {
         })
     }
 
+    // this call acts as a recursive call until everything in the pending queue has been posted
     static nextPending() {
         IDBHelper.commitPending(IDBHelper.nextPending);
     }
 
+    // actual network call being performed after fetching the values from pending queue in IDB
     static commitPending(callback) {
         IDBHelper.openDB().then(db => {
             let tx = db.transaction(objectStore3, 'readwrite');
@@ -112,6 +122,7 @@ class IDBHelper {
 
             pendingStore.then(cursor => {
                 if(!cursor) {
+                    // nothing left in the database return
                     return;
                 }
 
@@ -119,7 +130,7 @@ class IDBHelper {
                 method = cursor.value.data.method;
                 body = cursor.value.data.body;
                 
-                // the database has invalid content and needs to be removed
+                // the database has invalid content and the entry needs to be removed
                 if ((!url || !method) || (method === "POST" && !body)) {
                     cursor.delete().then(() => {
                         callback();
@@ -134,6 +145,7 @@ class IDBHelper {
 
                 console.log('data that would be posted: ',data);
 
+                // making the network call
                 fetch(url, data).then(response => {
                     console.log('received the following response: ',response);
                     if (!response.ok && !response.redirected){
@@ -144,6 +156,7 @@ class IDBHelper {
                     const deleteStoreTx = db.transaction(objectStore3, 'readwrite');
                     const deleteStore = deleteStoreTx.objectStore(objectStore3).openCursor();
 
+                    // after making successful network call removing the value from the pending queue
                     deleteStore.then(cursor => {
                         cursor.delete().then(() => {
                             console.log("Deleting the pending data from queue");
@@ -157,9 +170,6 @@ class IDBHelper {
                 console.log("Some error occurred getting cursor for pending db: ",error);
                 return;
             })
-
-            
-
         })
     }
 }
