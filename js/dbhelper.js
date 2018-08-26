@@ -249,21 +249,17 @@ class DBHelper {
       comments: comment
     }
 
-    // adding the post data to the indexed db
-    console.log("Inserting review ", body);
-
     let reviewPromise = IDBHelper.insertToReviewDB(body);
 
-    reviewPromise.then((reviews) => {
+    reviewPromise.then(() => {
       console.log('Value successfully inserted into IDB');
-      callback(null, reviews);
+      // calling IDB for pending request flow
+      IDBHelper.insertToPendingList('http://localhost:1337/reviews', 'POST', body);
+      // callback(null, null);
     }).catch(error => {
       console.log(`Some error occurred: ${error}`);
       callback(error, null);
     })
-    // callback(error, null);
-
-    // callback(null, result);
   }
 
 

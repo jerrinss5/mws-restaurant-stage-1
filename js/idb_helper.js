@@ -1,15 +1,18 @@
 const objectStore = "resto-review";
-const objectStore2 = "reviewaddition"
+const objectStore2 = "review-addition"
+const objectStore3 = "pending-reviews"
 
 class IDBHelper {
     // method to open an IDB and return the promise for the same
     static openDB() {
-        const dbPromise = idb.open('resto-review-db', 2, upgradeDb => {
+        const dbPromise = idb.open('resto-review-db', 3, upgradeDb => {
             switch(upgradeDb.oldVersion) {
               case 0:
                 upgradeDb.createObjectStore(objectStore, { keyPath: "id"});
               case 1:
                 upgradeDb.createObjectStore(objectStore2, { autoIncrement : true });
+              case 3:
+                upgradeDb.createObjectStore(objectStore3, { autoIncrement : true });
             }
         });
         return dbPromise;
@@ -71,5 +74,92 @@ class IDBHelper {
             // returning the promise for insertion
             return tx.complete;
         });
+    }
+    
+    // temoprarily storing the pending request list
+    static insertToPendingList(url, method, body) {
+        return IDBHelper.openDB().then(db => {
+            let tx = db.transaction(objectStore3, 'readwrite');
+            let pendingStore = tx.objectStore(objectStore3);
+
+            pendingStore.put({
+                data : {
+                    url,
+                    method,
+                    body
+                }
+            }).then(() => {
+                console.log('successfully added to the pending db');
+                IDBHelper.nextPending();
+            }).catch(error => {
+                console.log('Some error occurred: ', error);
+            });
+        })
+    }
+
+    static nextPending() {
+        IDBHelper.commitPending(IDBHelper.nextPending);
+    }
+
+    static commitPending(callback) {
+        IDBHelper.openDB().then(db => {
+            let tx = db.transaction(objectStore3, 'readwrite');
+            let pendingStore = tx.objectStore(objectStore3).openCursor();
+            
+            let url;
+            let method;
+            let body;
+
+            pendingStore.then(cursor => {
+                if(!cursor) {
+                    return;
+                }
+
+                url = cursor.value.data.url;
+                method = cursor.value.data.method;
+                body = cursor.value.data.body;
+                
+                // the database has invalid content and needs to be removed
+                if ((!url || !method) || (method === "POST" && !body)) {
+                    cursor.delete().then(() => {
+                        callback();
+                    });
+                    return;
+                };
+
+                const data = {
+                    body: JSON.stringify(body),
+                    method: method
+                }
+
+                console.log('data that would be posted: ',data);
+
+                fetch(url, data).then(response => {
+                    console.log('received the following response: ',response);
+                    if (!response.ok && !response.redirected){
+                        return;
+                    }
+                    console.log('Successfully sent request to ', url, ' and received back ', response);
+                }).then(() => {
+                    const deleteStoreTx = db.transaction(objectStore3, 'readwrite');
+                    const deleteStore = deleteStoreTx.objectStore(objectStore3).openCursor();
+
+                    deleteStore.then(cursor => {
+                        cursor.delete().then(() => {
+                            console.log("Deleting the pending data from queue");
+                            console.log("calling the callback function")
+                            callback();
+                        });
+                    })
+                    
+                })
+            }).catch(error => {
+                console.log("Some error occurred getting cursor for pending db: ",error);
+                return;
+            })
+
+            
+
+        })
     }
 }
