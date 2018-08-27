@@ -16,6 +16,8 @@ window.initMap = () => {
       });
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+      // updating reviews which were cached offline
+      IDBHelper.nextPending();
     }
   });
 }
@@ -98,7 +100,8 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  IDBHelper.getReviewForRestaurantById(restaurant.id, fillReviewsHTML);
+  // fillReviewsHTML();
 }
 
 /**
@@ -124,12 +127,16 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (error, reviews)  => {
+  if (error) {
+    console.log(`Some error occurred while getting the reviews $(error)`);
+  }
+  self.restaurant.reviews = reviews;
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
-
+  
   if (!reviews) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
@@ -150,10 +157,12 @@ createReviewHTML = (review) => {
   const li = document.createElement('li');
   const name = document.createElement('p');
   name.innerHTML = review.name;
+  name.className = "restaurant-review-user";
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  const createdDate = review.createdAt;
+  date.innerHTML = new Date(createdDate).toLocaleString();
   li.appendChild(date);
 
   const rating = document.createElement('p');
@@ -199,6 +208,8 @@ getParameterByName = (name, url) => {
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+// on submit of the review saving it on IDB and making a network call
+// works in offline mode as well
 const saveReview = () => {
   // fetching the name from the html element
   const name = document.getElementById("reviewerName").value;

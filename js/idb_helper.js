@@ -172,4 +172,23 @@ class IDBHelper {
             })
         })
     }
+
+    static getReviewForRestaurantById(id, callback) {
+        const fetchURL = "http://localhost:1337/reviews/?restaurant_id="+id;
+        fetch(fetchURL, {method: "GET"}).then(response => {
+            console.log('GET call for reviews returned: ',response);
+            // using clone so that the actual response can be used later
+            if (!response.clone().ok && !response.clone().redirected()) {
+                throw "No reviews for the restaurant id: "+id;
+            }
+
+            // sending back the response after parsing using JSON back to the HTML to be populated
+            response.json().then(result => {
+                callback(null, result);
+            }).catch(error => {
+                console.log('Some error occurred: ',error);
+                callback(error, null);
+            })
+        });
+    }
 }
