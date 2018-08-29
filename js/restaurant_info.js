@@ -221,10 +221,6 @@ const saveReview = () => {
   console.log("Adding review by: ", name);
 
   DBHelper.saveReview(self.restaurant.id, name, rating, comment, (error, review) => {
-    if(review){
-      console.log("Received the review callback", review);
-    }
-    
     if (error) {
       console.log("Error saving review: ", error);
     }

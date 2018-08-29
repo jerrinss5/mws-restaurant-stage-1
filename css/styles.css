@@ -431,3 +431,18 @@ nav h1 a {
   text-decoration-line: underline;
   font-size: 14px;
 }
+
+/********** Favorite Sytles ***********/
+/********** Design Referenced from Doug Brown  **********/
+
+#restaurants-list li button {
+  border-bottom: 3px solid #eee;
+  display: inline-block;
+  font-size: 12px;
+  margin: 10px 0 0;
+  padding: 8px 30px 10px;
+  text-align: right;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+}

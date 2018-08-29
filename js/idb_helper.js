@@ -83,6 +83,7 @@ class IDBHelper {
     // 4th removing from the pending queue
     // temoprarily storing the pending request list
     static insertToPendingList(url, method, body) {
+        console.log(`Adding ${body} to pending list`);
         return IDBHelper.openDB().then(db => {
             // standard open transaction to the object store of pending reviews 
             let tx = db.transaction(objectStore3, 'readwrite');
@@ -190,5 +191,49 @@ class IDBHelper {
                 callback(error, null);
             })
         });
+    }
+
+    static updateFavClick(id, newState) {
+        // disabling the click on the fav button until all the update has been finished
+        const fav = document.getElementById("favorite-icon-" + id);
+        fav.onclick = null;
+
+        const url = `http://localhost:1337/restaurants/${id}/?is_favorite=${newState}`;
+        const method = "PUT";
+        let body;
+
+        IDBHelper.openDB().then( db => {
+            let tx = db.transaction(objectStore, 'readwrite');
+
+            const objData = tx.objectStore(objectStore).get(Number(id)).then(value => {
+                if(!value){
+                    console.log("No data found");
+                    return;
+                }
+
+                // updating the favorite state of the database
+                value.is_favorite = newState;
+
+                // assigning value to body
+                body = value;
+
+                const reviewTx = db.transaction(objectStore, 'readwrite');
+                reviewTx.objectStore(objectStore).put(value);
+                return reviewTx.complete;
+            })
+            objData.then(() => {
+                console.log(`Successfully cached the favorite value to IDB`);
+                IDBHelper.insertToPendingList(url, method, body);
+
+            })
+        });
+
+        fav.onclick = event => favoriteClickHandler(id, !newState);
+
+        // depending on the value assigning the state for the like page
+        fav.style.background = newState
+        ? `url("/icons/like-2.svg") no-repeat`
+        : `url("icons/like-1.svg") no-repeat`;
+        
     }
 }

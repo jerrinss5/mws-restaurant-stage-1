@@ -170,6 +170,26 @@ createRestaurantHTML = (restaurant) => {
   address.innerHTML = restaurant.address;
   li.append(address);
 
+  // converting the fav value from string to boolean
+  const isFav = (restaurant["is_favorite"] && restaurant["is_favorite"].toString() === "true") ? true : false;
+  const favoriteDiv = document.createElement("div");
+  favoriteDiv.className = "favorite-icon";
+  const favorite = document.createElement("button");
+
+  // depending of the fav value load the respective image
+  favorite.style.background = isFav?
+  `url("/icons/like-2.svg") no-repeat`
+  :`url("/icons/like-1.svg") no-repeat`;
+
+  favorite.innerHTML = isFav?
+  `${restaurant.name} is a favorite`
+  :`${restaurant.name} is not a favorite`;
+
+  favorite.id = "favorite-icon-" + restaurant.id;
+  favorite.onclick = event => favoriteClickHandler(restaurant.id, !isFav);
+  favoriteDiv.append(favorite);
+  li.append(favoriteDiv);
+
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
@@ -181,6 +201,20 @@ createRestaurantHTML = (restaurant) => {
   li.append(more)
 
   return li
+}
+
+/**
+ * Function to handle the favorite button click
+ */
+const favoriteClickHandler = (id, newState) => {
+  // checking if the values belong to the current list of resto
+  const restaurant = self
+    .restaurants
+    .filter(r => r.id === id)[0];
+  if (!restaurant)
+    return;
+  // making call to the IDB Helper file to persist the click info
+  IDBHelper.updateFavClick(id, newState);
 }
 
 /**

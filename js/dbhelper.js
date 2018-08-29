@@ -258,7 +258,7 @@ class DBHelper {
       // storing the request call first to pending request flow before making the network call
       IDBHelper.insertToPendingList('http://localhost:1337/reviews', 'POST', body);
       // after inserting to pending list and attempting the network sending back the request to the main page
-      // callback(null, null);
+      callback(null, null);
     }).catch(error => {
       console.log(`Some error occurred: ${error}`);
       callback(error, null);
