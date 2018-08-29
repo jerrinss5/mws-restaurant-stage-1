@@ -14,6 +14,8 @@ self.addEventListener('install', event => {
         "/js/idb.js",
         "/js/idb_helper.js",
         "/manifest.json",
+        "/icons/like-1.svg",
+        "/icons/like-2.svg",
         "https://fonts.gstatic.com/s/roboto/v15/2UX7WLTfW3W8TclTUvlFyQ.woff",
         "https://fonts.gstatic.com/s/roboto/v15/d-6IYplOFocCacKzxwXSOD8E0i7KZn-EPnyo3HZu7kw.woff"
     ]

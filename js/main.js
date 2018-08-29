@@ -87,6 +87,8 @@ window.initMap = () => {
   const map_attr = document.getElementById('map');
   map_attr.setAttribute("role", "application");
   updateRestaurants();
+  // updating favorites which were cached offline
+  IDBHelper.nextPending();
 }
 
 /**
