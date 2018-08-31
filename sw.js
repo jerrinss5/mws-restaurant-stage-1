@@ -63,9 +63,8 @@ self.addEventListener('fetch', function(event){
 });
 
 function serveReviews(request) {
-  
     return caches.open(staticCacheName).then(cache => {
-      return cache.match(request).then(response => {
+      return cache.match(request, {ignoreSearch: true}).then(response => {
         if (response) return response;
   
         return fetch(request).then(networkResponse => {
