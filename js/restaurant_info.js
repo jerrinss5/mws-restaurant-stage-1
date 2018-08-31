@@ -17,7 +17,7 @@ window.initMap = () => {
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
       // updating reviews which were cached offline
-      IDBHelper.nextPending();
+      IDBHelper.commitPending((error, review) => {});
     }
   });
 }
@@ -223,11 +223,12 @@ const saveReview = () => {
   DBHelper.saveReview(self.restaurant.id, name, rating, comment, (error, review) => {
     if (error) {
       console.log("Error saving review: ", error);
+      return;
     }
     // Update the button onclick event to avoid resubmitting it in quick successions
     const btn = document.getElementById("btnSaveReview");
     btn.onclick = event => saveReview();
-
+    console.log("Reloading the page");
     // redirecting back to the same page to refresh the page
     window.location.href = "/restaurant.html?id=" + self.restaurant.id;
   });

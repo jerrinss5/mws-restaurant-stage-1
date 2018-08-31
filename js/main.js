@@ -88,7 +88,7 @@ window.initMap = () => {
   map_attr.setAttribute("role", "application");
   updateRestaurants();
   // updating favorites which were cached offline
-  IDBHelper.nextPending();
+  IDBHelper.commitPending((error, review) => {});
 }
 
 /**

@@ -11,9 +11,17 @@
 
  if python server on 3.6.3 is used to serve the page then manifest.json file doesn't get loaded hurting the PWA score.
 
+--------------------------------------------
+# Stage 3 notes
+--------------------------------------------
+
 Offline review functionality Details:
 
-When the user is offline and submits a review it gets cached in the indexed DB. And this review will be sent the next time user submits a review next time and the network is online.
+When the user is offline and submits a review it gets cached in the indexed DB. 
+And this review will be sent the next time user reloads the page when the network is online.
+On reload the PUT request is sent to the REST server and another reload would be required to view the reviews.
+So to see offline reviews when back online: make sure to refresh 2 times.
+
 ---
 
 #### _Three Stage Course Material Project - Restaurant Reviews_

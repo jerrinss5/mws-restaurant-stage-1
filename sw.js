@@ -46,7 +46,6 @@ self.addEventListener('fetch', function(event){
     // if it is not try to serve from cache and if not present in cache serve from the web
     // also only caching localhost files and a google maps api required for working offline
     if (requestedURL.port !== "1337" && (requestedURL.hostname === "localhost" || requestedURL.href === "https://maps.googleapis.com/maps/api/js?libraries=places&callback=initMap")){
-        console.log('caching for hostname: ', requestedURL.hostname);
         event.respondWith(
             caches.match(event.request).then(response => {
                 return response || fetch(event.request).then(response => {

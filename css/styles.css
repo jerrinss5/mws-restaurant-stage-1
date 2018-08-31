@@ -416,7 +416,7 @@ nav h1 a {
 }
 /* making the user name bold */
 .restaurant-review-user {
-  font-weight: 500;
+  font-weight: 1000;
 }
 /* making the reviews responsive */
 #reviews-heading {

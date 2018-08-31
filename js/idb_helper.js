@@ -1,17 +1,14 @@
 const objectStore = "resto-review";
-const objectStore2 = "review-addition"
-const objectStore3 = "pending-reviews"
+const objectStore3 = "pending-reviews";
 
 class IDBHelper {
     // method to open an IDB and return the promise for the same
     static openDB() {
-        const dbPromise = idb.open('resto-review-db', 3, upgradeDb => {
+        const dbPromise = idb.open('resto-review-db', 2, upgradeDb => {
             switch(upgradeDb.oldVersion) {
               case 0:
                 upgradeDb.createObjectStore(objectStore, { keyPath: "id"});
               case 1:
-                upgradeDb.createObjectStore(objectStore2, { autoIncrement : true });
-              case 3:
                 upgradeDb.createObjectStore(objectStore3, { autoIncrement : true });
             }
         });
@@ -60,31 +57,14 @@ class IDBHelper {
 
         return dbPromise;
     }
-
-    // inserting the review data into the review db
-    static insertToReviewDB(values) {
-        // opening the indexed db
-        return IDBHelper.openDB().then(db => {
-            let tx = db.transaction(objectStore2, 'readwrite');
-            let reviewStore = tx.objectStore(objectStore2);
-
-            // caching the values to the indexed DB
-            reviewStore.put(values);
-
-            // returning the promise for insertion
-            return tx.complete;
-        });
-    }
     
     // REF: Dougb Brown code base for basic idea of 
-    // 1st Caching 
-    // 2nd Storing to pending queue
-    // 3rd Making network call 
-    // 4th removing from the pending queue
-    // temoprarily storing the pending request list
-    static insertToPendingList(url, method, body) {
-        console.log(`Adding ${body} to pending list`);
-        return IDBHelper.openDB().then(db => {
+    // 1st Storing to pending queue
+    // 2nd Making network call 
+    // 3rd removing from the pending queue
+    static insertToPendingList(url, method, body, callback) {
+        console.log(`Adding body to pending queue`);
+        IDBHelper.openDB().then(db => {
             // standard open transaction to the object store of pending reviews 
             let tx = db.transaction(objectStore3, 'readwrite');
             let pendingStore = tx.objectStore(objectStore3);
@@ -99,34 +79,31 @@ class IDBHelper {
             }).then(() => {
                 console.log('successfully added to the pending db');
                 // on successful insertion making call to next pending
-                IDBHelper.nextPending();
+                IDBHelper.commitPending(callback);
             }).catch(error => {
-                console.log('Some error occurred: ', error);
+                console.log('Some error occurred while adding to the pending queue: ', error);
+                return;
             });
         })
-    }
-
-    // this call acts as a recursive call until everything in the pending queue has been posted
-    static nextPending() {
-        IDBHelper.commitPending(IDBHelper.nextPending);
     }
 
     // actual network call being performed after fetching the values from pending queue in IDB
     static commitPending(callback) {
         IDBHelper.openDB().then(db => {
             let tx = db.transaction(objectStore3, 'readwrite');
-            let pendingStore = tx.objectStore(objectStore3).openCursor();
             
             let url;
             let method;
             let body;
 
-            pendingStore.then(cursor => {
+            tx.objectStore(objectStore3).openCursor().then(function iterateForward(cursor) {
                 if(!cursor) {
-                    // nothing left in the database return
+                    // cursor undefined nothing left in the database return
+                    console.log(`cursor undefined nothing left in the pending database returning`);
+                    callback(null, null);
                     return;
                 }
-
+                
                 url = cursor.value.data.url;
                 method = cursor.value.data.method;
                 body = cursor.value.data.body;
@@ -134,9 +111,11 @@ class IDBHelper {
                 // the database has invalid content and the entry needs to be removed
                 if ((!url || !method) || (method === "POST" && !body)) {
                     cursor.delete().then(() => {
-                        callback();
-                    });
-                    return;
+                        return cursor.continue().then(iterateForward);
+                    }).catch(error => {
+                        console.log(`some error occurred when deleting the cursor value for invalid content ${error}`);
+                        return;
+                    })
                 };
 
                 const data = {
@@ -144,33 +123,31 @@ class IDBHelper {
                     method: method
                 }
 
-                console.log('data that would be posted: ',data);
+                console.log(`${JSON.stringify(body)} ready for ${method} over network`);
 
                 // making the network call
                 fetch(url, data).then(response => {
-                    console.log('received the following response: ',response);
+                    console.log('Successfully sent request to ', url, ' and received back ', response);
                     if (!response.ok && !response.redirected){
+                        console.log(`Seems like the network is offline or the REST service is down`);
                         return;
                     }
-                    console.log('Successfully sent request to ', url, ' and received back ', response);
-                }).then(() => {
+                    
                     const deleteStoreTx = db.transaction(objectStore3, 'readwrite');
                     const deleteStore = deleteStoreTx.objectStore(objectStore3).openCursor();
 
                     // after making successful network call removing the value from the pending queue
                     deleteStore.then(cursor => {
                         cursor.delete().then(() => {
-                            console.log("Deleting the pending data from queue");
-                            console.log("calling the callback function")
-                            callback();
+                            console.log("Deleted the pending data from queue");
+                            return cursor.continue().then(iterateForward);
                         });
                     })
-                    
-                })
-            }).catch(error => {
-                console.log("Some error occurred getting cursor for pending db: ",error);
-                return;
-            })
+                }).catch(error => {
+                    console.log(`some error occurred with fetch call: ${error}`);
+                });
+            });
+            
         })
     }
 
@@ -223,8 +200,7 @@ class IDBHelper {
             })
             objData.then(() => {
                 console.log(`Successfully cached the favorite value to IDB`);
-                IDBHelper.insertToPendingList(url, method, body);
-
+                IDBHelper.insertToPendingList(url, method, body, (error, result) => {});
             })
         });
 
